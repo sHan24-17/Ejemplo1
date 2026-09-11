@@ -69,10 +69,22 @@ jobs:
       - name: 📥 Clonar repositorio
         uses: actions/checkout@v4
 
+      - name: 📦 Generar artefacto descargable del sitio
+        uses: actions/upload-artifact@v4
+        with:
+          name: cr7-sitio-web-auditado
+          path: |
+            index.html
+            styles.css
+            script.js
+            AUDITORIA.md
+
       - name: ⚙️ Configurar GitHub Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
-      - name: 📤 Empaquetar y subir artefactos del sitio
+      - name: 📤 Empaquetar y subir artefactos del sitio para Pages
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
