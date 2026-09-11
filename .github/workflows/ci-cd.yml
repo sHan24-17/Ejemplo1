@@ -1,0 +1,82 @@
+name: CI/CD Pipeline - WCAG AA, HTML5, Responsive & Deploy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+# Permisos para GitHub Pages y seguridad del token OIDC
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Control de concurrencia para evitar despliegues simultáneos
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # =========================================================================
+  # FASE DE PRUEBAS Y AUDITORÍA AUTOMATIZADA (CI)
+  # =========================================================================
+  audit-and-test:
+    name: 🧪 Auditoría de Calidad, Accesibilidad y Seguridad
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configurar Node.js (v20 LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 📦 Instalar dependencias de pruebas
+        run: npm ci
+
+      - name: 🔒 1. Verificar seguridad de enlaces externos (HTTPS, rel noopener noreferrer)
+        run: npm run test:links
+
+      - name: 📱 2. Verificar diseño adaptativo y responsivo (viewport, media queries, flex/grid)
+        run: npm run test:responsive
+
+      - name: 🌐 3. Verificar estándares y semántica HTML5 (doctype, etiquetas semánticas, html-validate)
+        run: npm run test:html5
+
+      - name: ♿ 4. Verificar accesibilidad WCAG 2.1 / 2.2 AA (axe-core, contraste, focus trap, aria)
+        run: npm run test:wcag
+
+  # =========================================================================
+  # FASE DE DESPLIEGUE CONTINUO (CD)
+  # Solo se ejecuta si TODAS las pruebas anteriores pasaron exitosamente en main
+  # =========================================================================
+  deploy:
+    name: 🚀 Despliegue en GitHub Pages
+    needs: [audit-and-test]
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: 📥 Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: 📤 Empaquetar y subir artefactos del sitio
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: 🚀 Desplegar a GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

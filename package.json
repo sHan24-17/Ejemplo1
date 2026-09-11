@@ -1,0 +1,32 @@
+{
+  "name": "ejemplo1",
+  "version": "1.0.0",
+  "description": "Sitio web interactivo sobre Cristiano Ronaldo (CR7) con estándares WCAG AA, HTML5, Responsive y CI/CD",
+  "main": "script.js",
+  "scripts": {
+    "test": "node tests/test-security-links.js && node tests/test-responsive.js && node tests/test-html5.js && node tests/test-wcag-aa.js",
+    "test:links": "node tests/test-security-links.js",
+    "test:responsive": "node tests/test-responsive.js",
+    "test:html5": "node tests/test-html5.js",
+    "test:wcag": "node tests/test-wcag-aa.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sHan24-17/Ejemplo1.git"
+  },
+  "keywords": [
+    "cr7",
+    "wcag",
+    "a11y",
+    "responsive",
+    "html5",
+    "github-actions"
+  ],
+  "author": "Shan",
+  "license": "MIT",
+  "devDependencies": {
+    "axe-core": "^4.13.0",
+    "html-validate": "^11.15.0",
+    "jsdom": "^30.0.1"
+  }
+}

@@ -69,6 +69,16 @@ html {
   font-size: 16px;
 }
 
+/* Multimedia responsiva */
+img,
+picture,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
 body {
   font-family: var(--font-family-base);
   background-color: var(--color-bg-body);
