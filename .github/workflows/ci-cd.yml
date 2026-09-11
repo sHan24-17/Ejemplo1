@@ -81,8 +81,6 @@ jobs:
 
       - name: ⚙️ Configurar GitHub Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: 📤 Empaquetar y subir artefactos del sitio para Pages
         uses: actions/upload-pages-artifact@v3
